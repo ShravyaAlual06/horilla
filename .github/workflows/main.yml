@@ -1,11 +1,12 @@
 name: CI/CD Pipeline – Horilla Demo (Django)
+ 
 on:
 
   push:
 
     branches:
 
-      - 1.0
+      - main
  
 jobs:
 
@@ -86,24 +87,25 @@ jobs:
         run: |
 
           docker push ${{ secrets.DOCKER_USERNAME }}/horilla_demo:latest
+ 
+      - name: SonarQube Analysis
 
-      - name: SonarQube Analysis 
+        uses: sonarsource/sonarqube-scan-action@v2
 
-        uses: sonarsource/sonarqube-scan-action@v2 
+        with:
 
-        with: 
+          projectBaseDir: .
 
-          projectBaseDir: . 
+          args: >
 
-          args: > 
+            -Dsonar.projectKey=Horilla-Demo
 
-            -Dsonar.projectKey=Horilla-Demo 
+            -Dsonar.python.version=3.11
 
-            -Dsonar.python.version=3.11 
+        env:
 
-        env: 
-
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
  
